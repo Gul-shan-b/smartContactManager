@@ -31,8 +31,12 @@ pipeline {
                     :: Write a tiny Node.js server script to serve the directory securely
                     echo const http = require('http'); const fs = require('fs'); const path = require('path'); const server = http.createServer(function(req, res) { let filePath = '.' + req.url; if (filePath == './') filePath = './index.html'; let extname = path.extname(filePath); let contentType = 'text/html'; switch (extname) { case '.js': contentType = 'text/javascript'; break; case '.css': contentType = 'text/css'; break; } fs.readFile(filePath, function(error, content) { if (error) { res.writeHead(500); res.end('Error'); } else { res.writeHead(200, { 'Content-Type': contentType }); res.end(content, 'utf-8'); } }); }); server.listen(8081); > serve.js
                     
-                    :: Run raw Node (no Start-Process to ensure it runs completely detached from Jenkins)
-                    start "" /B node serve.js
+                    set JENKINS_NODE_COOKIE=dontKillMe
+                    
+                    :: Run raw Node using wmic to completely detach the process tree from Jenkins
+                    wmic process call create "node C:\\temp\\ngd-app\\serve.js"
+                    
+                    echo "Application deployed successfully and serving locally on port 8081!"
                     
                     echo "Application deployed successfully and serving locally on port 8081!"
                 '''
