@@ -23,10 +23,10 @@ pipeline {
                     xcopy /E /Y /C /I * "C:\\temp\\ngd-app\\"
                        copy /Y serve.js "C:\\temp\\ngd-app\\serve.js"
                     
-                    :: 3. Kill any existing process running on port 8081
-                    FOR /F "tokens=5" %%T IN ('netstat -a -n -o ^| find "LISTENING" ^| find ":8081"') DO TaskKill.exe /PID %%T /F
+                    :: 3. Kill any existing process running on port 8080
+                    FOR /F "tokens=5" %%T IN ('netstat -a -n -o ^| find "LISTENING" ^| find ":8080"') DO TaskKill.exe /PID %%T /F
                     
-                    :: 4. Start a simple Node web server in the background on port 8081
+                    :: 4. Start a simple Node web server in the background on port 8080
                     cd /d "C:\\temp\\ngd-app"
                     :: Diagnostics: ensure Node is available for the Jenkins service account
                     where node
@@ -44,10 +44,10 @@ pipeline {
                     :: Quick log peek in case the process exits immediately
                     powershell -NoProfile -Command "Start-Sleep -Milliseconds 500; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content -Path 'C:\\temp\\ngd-app\\server.log' -TotalCount 50 }"
 
-                    :: Health check: wait up to 10 seconds for port 8081 to listen
-                    powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8081 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8081 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; exit 1 }"
-
-                    echo "Application deployed successfully and serving locally on port 8081!"
+                          :: Health check: wait up to 10 seconds for port 8080 to listen
+                          powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8080 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8080 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; exit 1 }"
+                    
+                          echo "Application deployed successfully and serving locally on port 8080!"
                 '''
             }
         }
