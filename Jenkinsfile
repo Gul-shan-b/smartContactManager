@@ -34,7 +34,8 @@ pipeline {
                     
                                         :: Run raw Node using wmic to completely detach the process tree from Jenkins
                                         :: Ensure working directory is C:/temp/ngd-app so relative paths resolve
-                                        del /F /Q C:/temp/ngd-app/server.log 2>nul
+                                        powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue 'C:\\temp\\ngd-app\\server.log'"
+                                        powershell -NoProfile -Command "Get-Content -Path 'C:\\temp\\ngd-app\\serve.js' -TotalCount 1"
                                         wmic process call create "cmd /c cd /d C:/temp/ngd-app ^&^& node serve.js ^> C:/temp/ngd-app/server.log 2^>^&1"
                     
                                         :: Health check: wait up to 10 seconds for port 8081 to listen
