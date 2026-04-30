@@ -28,17 +28,39 @@ pipeline {
                     :: 4. Start a simple Node web server in the background on port 8081
                     cd /d "C:\\temp\\ngd-app"
                     
-                    :: Write a tiny Node.js server script to serve the directory securely
-                    echo const http = require('http'); const fs = require('fs'); const path = require('path'); const server = http.createServer(function(req, res) { let filePath = '.' + req.url; if (filePath == './') filePath = './index.html'; let extname = path.extname(filePath); let contentType = 'text/html'; switch (extname) { case '.js': contentType = 'text/javascript'; break; case '.css': contentType = 'text/css'; break; } fs.readFile(filePath, function(error, content) { if (error) { res.writeHead(500); res.end('Error'); } else { res.writeHead(200, { 'Content-Type': contentType }); res.end(content, 'utf-8'); } }); }); server.listen(8081); > serve.js
+                                        :: Write a tiny Node.js server script to serve the directory securely
+                                        powershell -NoProfile -Command "$script = @'
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const server = http.createServer(function(req, res) {
+    let filePath = '.' + req.url;
+    if (filePath === './') filePath = './index.html';
+    const extname = path.extname(filePath);
+    let contentType = 'text/html';
+    switch (extname) {
+        case '.js': contentType = 'text/javascript'; break;
+        case '.css': contentType = 'text/css'; break;
+    }
+    fs.readFile(filePath, function(error, content) {
+        if (error) {
+            res.writeHead(500);
+            res.end('Error');
+        } else {
+            res.writeHead(200, { 'Content-Type': contentType });
+            res.end(content, 'utf-8');
+        }
+    });
+});
+server.listen(8081);
+'@; Set-Content -Path 'serve.js' -Value $script -Encoding UTF8"
                     
-                    set JENKINS_NODE_COOKIE=dontKillMe
+                                        set JENKINS_NODE_COOKIE=dontKillMe
                     
-                    :: Run raw Node using wmic to completely detach the process tree from Jenkins
-                    wmic process call create "node C:\\temp\\ngd-app\\serve.js"
+                                        :: Run raw Node using wmic to completely detach the process tree from Jenkins
+                                        wmic process call create "cmd /c node C:\temp\ngd-app\serve.js ^> C:\temp\ngd-app\server.log 2^>^&1"
                     
-                    echo "Application deployed successfully and serving locally on port 8081!"
-                    
-                    echo "Application deployed successfully and serving locally on port 8081!"
+                                        echo "Application deployed successfully and serving locally on port 8081!"
                 '''
             }
         }
