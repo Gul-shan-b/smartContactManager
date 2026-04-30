@@ -32,7 +32,7 @@ pipeline {
                                         set JENKINS_NODE_COOKIE=dontKillMe
                     
                                         :: Run raw Node using wmic to completely detach the process tree from Jenkins
-                                        :: Ensure working directory is C:\temp\ngd-app so relative paths resolve
+                                        :: Ensure working directory is C:/temp/ngd-app so relative paths resolve
                                         wmic process call create "cmd /c cd /d C:/temp/ngd-app ^&^& node serve.js ^> C:/temp/ngd-app/server.log 2^>^&1"
                     
                                         echo "Application deployed successfully and serving locally on port 8081!"
