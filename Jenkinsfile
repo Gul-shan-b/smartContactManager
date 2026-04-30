@@ -28,20 +28,26 @@ pipeline {
                     
                     :: 4. Start a simple Node web server in the background on port 8081
                     cd /d "C:\\temp\\ngd-app"
-                    
-                                        :: serve.js is tracked in the repo and copied above; just run it
-                                        set JENKINS_NODE_COOKIE=dontKillMe
-                    
-                                        :: Run raw Node using wmic to completely detach the process tree from Jenkins
-                                        :: Ensure working directory is C:/temp/ngd-app so relative paths resolve
-                                        powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue 'C:\\temp\\ngd-app\\server.log'"
-                                        powershell -NoProfile -Command "Get-Content -Path 'C:\\temp\\ngd-app\\serve.js' -TotalCount 1"
-                                        wmic process call create "cmd /c cd /d C:/temp/ngd-app ^&^& node serve.js ^> C:/temp/ngd-app/server.log 2^>^&1"
-                    
-                                        :: Health check: wait up to 10 seconds for port 8081 to listen
-                                        powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8081 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8081 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; exit 1 }"
-                    
-                                        echo "Application deployed successfully and serving locally on port 8081!"
+                    :: Diagnostics: ensure Node is available for the Jenkins service account
+                    where node
+                    node -v
+
+                    :: serve.js is tracked in the repo and copied above; just run it
+                    set JENKINS_NODE_COOKIE=dontKillMe
+
+                    :: Run raw Node using wmic to completely detach the process tree from Jenkins
+                    :: Ensure working directory is C:/temp/ngd-app so relative paths resolve
+                    powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue 'C:\\temp\\ngd-app\\server.log'"
+                    powershell -NoProfile -Command "Get-Content -Path 'C:\\temp\\ngd-app\\serve.js' -TotalCount 1"
+                    wmic process call create "cmd /c cd /d C:/temp/ngd-app ^&^& node serve.js ^> C:/temp/ngd-app/server.log 2^>^&1"
+
+                    :: Quick log peek in case the process exits immediately
+                    powershell -NoProfile -Command "Start-Sleep -Milliseconds 500; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content -Path 'C:\\temp\\ngd-app\\server.log' -TotalCount 50 }"
+
+                    :: Health check: wait up to 10 seconds for port 8081 to listen
+                    powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8081 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8081 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; exit 1 }"
+
+                    echo "Application deployed successfully and serving locally on port 8081!"
                 '''
             }
         }
