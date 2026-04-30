@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(function (req, res) {
   let filePath = '.' + req.url;
   if (filePath === './') {
     filePath = './index.html';
@@ -30,7 +30,7 @@ const server = http.createServer((req, res) => {
       break;
   }
 
-  fs.readFile(filePath, (error, content) => {
+  fs.readFile(filePath, function (error, content) {
     if (error) {
       res.writeHead(500);
       res.end('Error');

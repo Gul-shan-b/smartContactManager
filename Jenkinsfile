@@ -21,6 +21,7 @@ pipeline {
                     
                     :: 2. Copy the latest code to that directory
                     xcopy /E /Y /C /I * "C:\\temp\\ngd-app\\"
+                       copy /Y serve.js "C:\\temp\\ngd-app\\serve.js"
                     
                     :: 3. Kill any existing process running on port 8081
                     FOR /F "tokens=5" %%T IN ('netstat -a -n -o ^| find "LISTENING" ^| find ":8081"') DO TaskKill.exe /PID %%T /F
