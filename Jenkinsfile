@@ -28,8 +28,13 @@ pipeline {
                     :: 4. Start a simple Python web server in the background on port 8081
                     cd /d "C:\\temp\\ngd-app"
                     
-                    :: Use powershell to start the process in the background without blocking Jenkins
-                    powershell -Command "Start-Process python -ArgumentList '-m', 'http.server', '8081' -WindowStyle Hidden"
+                    :: Check if python is available, otherwise try py (Windows Python Launcher)
+                    python --version >nul 2>&1
+                    IF %ERRORLEVEL% EQU 0 (
+                        powershell -Command "Start-Process python -ArgumentList '-m', 'http.server', '8081' -WindowStyle Hidden"
+                    ) ELSE (
+                        powershell -Command "Start-Process py -ArgumentList '-m', 'http.server', '8081' -WindowStyle Hidden"
+                    )
                     
                     echo "Application deployed successfully and serving locally on port 8081!"
                 '''
