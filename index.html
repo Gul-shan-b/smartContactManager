@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Contact Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard Overview</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="add_contact.html">Add Contact</a>
+                <a href="view_contacts.html">View Contacts</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="dashboard-stats">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='view_contacts.html'">
+                    <h2>Total Contacts</h2>
+                    <p id="stat-total" class="stat-number">...</p>
+                </div>
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='view_contacts.html?category=Friends'">
+                    <h2>Friends</h2>
+                    <p id="stat-friends" class="stat-number">...</p>
+                </div>
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='view_contacts.html?category=Family'">
+                    <h2>Family</h2>
+                    <p id="stat-family" class="stat-number">...</p>
+                </div>
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='view_contacts.html?category=Work'">
+                    <h2>Work</h2>
+                    <p id="stat-work" class="stat-number">...</p>
+                </div>
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='view_contacts.html?category=Clients'">
+                    <h2>Clients</h2>
+                    <p id="stat-clients" class="stat-number">...</p>
+                </div>
+            </div>
+            <div id="dashboardMessage" class="message"></div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load statistics when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof loadDashboardStats === 'function') {
+                loadDashboardStats();
+            }
+        });
+    </script>
+</body>
+</html>

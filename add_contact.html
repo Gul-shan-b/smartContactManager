@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Contact - Smart Contact Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Add New Contact</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="view_contacts.html">View Contacts</a>
+            </nav>
+        </header>
+
+        <main>
+            <form id="addContactForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                      <label for="work">Work/Company <span style="font-size:0.85em; color:#777;">(Optional)</span>:</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City:</label>
+                    <input type="text" id="city" name="city">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="Friends">Friends</option>
+                        <option value="Family">Family</option>
+                        <option value="Work">Work</option>
+                        <option value="Clients">Clients</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="photoFile">Photo Upload:</label>
+                    <input type="file" id="photoFile" name="photoFile" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Notes/Description:</label>
+                    <textarea id="description" name="description" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="btn">Save Contact</button>
+            </form>
+            <div id="contactMessage" class="message"></div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

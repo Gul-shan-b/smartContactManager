@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact History - Smart Contact Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Contact History</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="add_contact.html">Add Contact</a>
+                <a href="view_contacts.html">View Contacts</a>
+                <a href="history.html">History</a>
+                <a href="#" id="logoutBtn">Logout</a>
+            </nav>
+        </header>
+
+        <main>
+            <h2>Recently Added Contacts</h2>
+            <p>Showing your contacts sorted by the time they were added (newest first).</p>
+            <div id="historyContainer" class="contacts-grid">
+                <!-- History cards will be dynamically loaded here by app.js -->
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof loadHistory === 'function') {
+                loadHistory();
+            }
+        });
+    </script>
+</body>
+</html>

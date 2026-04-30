@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Contacts - Smart Contact Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Contacts</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="add_contact.html">Add Contact</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search contacts by name...">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="Friends">Friends</option>
+                    <option value="Family">Family</option>
+                    <option value="Work">Work</option>
+                    <option value="Clients">Clients</option>
+                </select>
+                <select id="sortFilter">
+                    <option value="asc">Name (A-Z)</option>
+                    <option value="desc">Name (Z-A)</option>
+                    <option value="date_desc">Newest First</option>
+                    <option value="date_asc">Oldest First</option>
+                </select>
+            </div>
+            <div id="contactsContainer" class="contacts-grid">
+                <!-- Contact cards will be dynamically loaded here by app.js -->
+            </div>
+            <div id="paginationControls" class="pagination"></div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Load contacts when the page is loaded
+        document.addEventListener('DOMContentLoaded', loadContacts);
+    </script>
+</body>
+</html>
