@@ -3,7 +3,10 @@ const fs = require('fs');
 const path = require('path');
 
 const server = http.createServer(function (req, res) {
-  let filePath = '.' + req.url;
+  // Extract just the pathname, ignoring query strings (e.g. ?category=Friends)
+  const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+  let filePath = '.' + parsedUrl.pathname;
+  
   if (filePath === './') {
     filePath = './index.html';
   }
