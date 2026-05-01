@@ -35,17 +35,16 @@ pipeline {
                     :: serve.js is tracked in the repo and copied above; just run it
                     set JENKINS_NODE_COOKIE=dontKillMe
 
-                    :: Run raw Node using wmic to completely detach the process tree from Jenkins
-                    :: Ensure working directory is C:/temp/ngd-app so relative paths resolve
-                    powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue 'C:\\temp\\ngd-app\\server.log'"
+                    :: Run node using PowerShell Start-Process to completely detach the process tree from Jenkins
+                    powershell -NoProfile -Command "Remove-Item -Force -ErrorAction SilentlyContinue 'C:\\temp\\ngd-app\\server.log', 'C:\\temp\\ngd-app\\server_error.log'"
                     powershell -NoProfile -Command "Get-Content -Path 'C:\\temp\\ngd-app\\serve.js' -TotalCount 1"
-                    wmic process call create "cmd /c cd /d C:/temp/ngd-app ^&^& node serve.js ^> C:/temp/ngd-app/server.log 2^>^&1"
+                    powershell -NoProfile -Command "Start-Process node -ArgumentList 'serve.js' -WorkingDirectory 'C:\\temp\\ngd-app' -RedirectStandardOutput 'C:\\temp\\ngd-app\\server.log' -RedirectStandardError 'C:\\temp\\ngd-app\\server_error.log' -WindowStyle Hidden"
 
                     :: Quick log peek in case the process exits immediately
                     powershell -NoProfile -Command "Start-Sleep -Milliseconds 500; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content -Path 'C:\\temp\\ngd-app\\server.log' -TotalCount 50 }"
 
                           :: Health check: wait up to 10 seconds for port 8080 to listen
-                          powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8080 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8080 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; exit 1 }"
+                          powershell -NoProfile -Command "$ok = $false; 1..10 | ForEach-Object { Start-Sleep -Milliseconds 500; if (Test-NetConnection -ComputerName 'localhost' -Port 8080 -InformationLevel Quiet) { $ok = $true; break } }; if (-not $ok) { Write-Host 'ERROR: Port 8080 did not start.'; if (Test-Path 'C:\\temp\\ngd-app\\server.log') { Get-Content 'C:\\temp\\ngd-app\\server.log' }; if (Test-Path 'C:\\temp\\ngd-app\\server_error.log') { Get-Content 'C:\\temp\\ngd-app\\server_error.log' }; exit 1 }"
                     
                           echo "Application deployed successfully and serving locally on port 8080!"
                 '''
